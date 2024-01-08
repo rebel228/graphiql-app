@@ -29,6 +29,7 @@ const EditorsSection = () => {
     try {
       headers = JSON.parse(headersString);
     } catch (error) {}
+    console.log(variables, headers, query);
 
     if (url) {
       dispatch(

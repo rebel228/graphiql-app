@@ -1,14 +1,11 @@
 import { FC, Suspense, lazy, useEffect } from 'react';
 import Loader from '../../components/Loader/Loader';
 import DocsModal from '../../components/GraphiQL/DocsModal';
-import { useAppSelector } from '../../hooks/useAppSelector';
-import { docsShown } from '../../store/slices/docsSlice';
 import { resetResult } from '../../store/slices/resultSlice';
 import { setEndpointState } from '../../store/slices/endpointSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 
 const GraphiQL: FC = () => {
-  const isDocsShown = useAppSelector(docsShown);
   const dispatch = useAppDispatch();
 
   const LazyControlPanel = lazy(
@@ -26,7 +23,7 @@ const GraphiQL: FC = () => {
       dispatch(resetResult());
       dispatch(setEndpointState({ url: '', isValid: false, isLoading: false }));
     };
-  });
+  }, [dispatch]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -40,7 +37,7 @@ const GraphiQL: FC = () => {
           <LazyResultsSection />
         </div>
       </section>
-      {isDocsShown && <DocsModal />}
+      <DocsModal />
     </Suspense>
   );
 };

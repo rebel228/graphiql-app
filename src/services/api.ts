@@ -45,16 +45,6 @@ const api = createApi({
           query: DOCUMENTATION_QUERY,
         }),
       }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        dispatch(setEndpointState({ isLoading: true, isValid: false }));
-        try {
-          await queryFulfilled;
-          dispatch(setEndpointState({ isLoading: false, isValid: true }));
-          dispatch(resetResult());
-        } catch (err) {
-          dispatch(setEndpointState({ isLoading: false, isValid: false }));
-        }
-      },
     }),
     getGraphQLData: builder.query<string, GetGraphQLDataQueryParams>({
       query: ({ url, operationName, query, variables, headers }) => ({

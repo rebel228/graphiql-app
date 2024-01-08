@@ -1,11 +1,15 @@
-import { FC, Suspense, lazy } from 'react';
+import { FC, Suspense, lazy, useEffect } from 'react';
 import Loader from '../../components/Loader/Loader';
 import DocsModal from '../../components/GraphiQL/DocsModal';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { docsShown } from '../../store/slices/docsSlice';
+import { resetResult } from '../../store/slices/resultSlice';
+import { setEndpointState } from '../../store/slices/endpointSlice';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 
 const GraphiQL: FC = () => {
   const isDocsShown = useAppSelector(docsShown);
+  const dispatch = useAppDispatch();
 
   const LazyControlPanel = lazy(
     () => import('../../components/GraphiQL/ControlPanel')
@@ -16,6 +20,13 @@ const GraphiQL: FC = () => {
   const LazyResultsSection = lazy(
     () => import('../../components/GraphiQL/ResultsSection')
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetResult());
+      dispatch(setEndpointState({ url: '', isValid: false, isLoading: false }));
+    };
+  });
 
   return (
     <Suspense fallback={<Loader />}>

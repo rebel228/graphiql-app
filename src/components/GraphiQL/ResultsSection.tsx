@@ -26,7 +26,7 @@ const ResultsSection = () => {
   const variables = useAppSelector(resultVariablesSelector);
   const headers = useAppSelector(resultHeadersSelector);
 
-  const { data, error, isError, isFetching, isLoading, isSuccess, requestId } =
+  const { data, error, isError, isFetching, isSuccess, requestId } =
     useGetGraphQLDataQuery(
       {
         operationName: null,
@@ -43,7 +43,7 @@ const ResultsSection = () => {
   const [currentRequestId, setCurrentRequestId] = useState<string>('');
 
   useEffect(() => {
-    if (!isLoading && requestId && requestId !== currentRequestId) {
+    if (!isFetching && requestId && requestId !== currentRequestId) {
       if (isSuccess)
         toast.success(spellingList.graphiQLApiStatus.API_FETCH_SUCCESS, {
           draggable: true,
@@ -60,7 +60,6 @@ const ResultsSection = () => {
     error,
     isError,
     isFetching,
-    isLoading,
     isSuccess,
     requestId,
     spellingList,

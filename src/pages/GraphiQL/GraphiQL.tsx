@@ -4,6 +4,7 @@ import DocsModal from '../../components/GraphiQL/DocsModal';
 import { resetResult } from '../../store/slices/resultSlice';
 import { setEndpointState } from '../../store/slices/endpointSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { closeDocs } from '../../store/slices/docsSlice';
 
 const GraphiQL: FC = () => {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ const GraphiQL: FC = () => {
   useEffect(() => {
     return () => {
       dispatch(resetResult());
+      dispatch(closeDocs());
       dispatch(setEndpointState({ url: '', isValid: false, isLoading: false }));
     };
   }, [dispatch]);

@@ -28,7 +28,7 @@ const GraphiQL: FC = () => {
   return (
     <Suspense fallback={<Loader />}>
       <section
-        className="flex flex-col w-full h-full md:max-h-[calc(100vh-149.6px)]"
+        className="flex flex-col items-center w-full h-full md:max-h-[calc(100vh-149.6px)]"
         data-testid="graphql-page"
       >
         <LazyControlPanel />
@@ -36,8 +36,8 @@ const GraphiQL: FC = () => {
           <LazyEditorsSection />
           <LazyResultsSection />
         </div>
+        <DocsModal />
       </section>
-      <DocsModal />
     </Suspense>
   );
 };

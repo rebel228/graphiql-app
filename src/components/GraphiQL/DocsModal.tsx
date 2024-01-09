@@ -55,11 +55,11 @@ const DocsModal: FC = () => {
       {isDocsShown && isSuccess && !isFetching && (
         <>
           <div
-            className="absolute bg-black opacity-20 cursor-pointer w-full h-full max-h-full md:max-h-[calc(100vh-117.6px)] lg:max-h-[calc(100vh-149.6px)] z-20"
+            className="absolute top-0 bg-black opacity-20 cursor-pointer w-full h-full max-h-full md:max-h-[calc(100vh-117.6px)] lg:max-h-[calc(100vh-149.6px)] z-20"
             onClick={handleCloseDocs}
           />
           <section
-            className="flex border-4 border-white rounded-lg absolute z-30 w-[85%] max-h-[calc(100vh-169.6px)] min-h-[50px] bg-white"
+            className="absolute top-6 flex border-4 border-white rounded-lg absolute z-30 w-[85%] overflow-auto max-h-[calc(100%-50px)] min-h-[50px] bg-white"
             data-testid="docs-section"
           >
             <CodeEditor

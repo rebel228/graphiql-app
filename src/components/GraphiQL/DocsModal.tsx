@@ -1,7 +1,6 @@
 import { FC, Suspense, useContext, useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { closeDocs, docsShown } from '../../store/slices/docsSlice';
-import { prettify } from '../../helpers/prettify';
 import CodeEditor from './CodeEditor';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import ButtonThemed from '../_ui/ButtonThemed/ButtonThemed';
@@ -64,7 +63,7 @@ const DocsModal: FC = () => {
           >
             <CodeEditor
               mode="docs"
-              defaultValue={prettify(JSON.stringify(data))}
+              defaultValue={JSON.stringify(data, null, 2)}
             >
               <ButtonThemed
                 className="opacity-50 rounded-full p-2 hover:bg-peachFuzz"

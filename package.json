@@ -60,5 +60,11 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
     "vitest": "^1.0.2"
+  },
+  "overrides": {
+  "@material-tailwind/react": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
   }
 }

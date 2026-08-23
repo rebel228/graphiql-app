@@ -64,7 +64,7 @@ const SignUp: FC = () => {
         setLoading(false);
         dispatch(login());
         setLoading(true);
-        auth.currentUser &&
+        if (auth.currentUser) {
           updateProfile(auth.currentUser, {
             displayName: data.name,
           })
@@ -78,6 +78,7 @@ const SignUp: FC = () => {
                 toast.error(`${errorCode}`, { draggable: false });
               }
             });
+        }
         toast.success(`${spellingList.forms.success}`, { draggable: false });
         <Navigate to={Paths.MAIN} replace />;
       })

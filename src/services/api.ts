@@ -27,7 +27,7 @@ const api = createApi({
           await queryFulfilled;
           dispatch(setEndpointState({ isLoading: false, isValid: true }));
           dispatch(resetResult());
-        } catch (err) {
+        } catch {
           dispatch(setEndpointState({ isLoading: false, isValid: false }));
         }
       },
@@ -67,7 +67,7 @@ const api = createApi({
         try {
           await queryFulfilled;
           dispatch(setEndpointState({ isLoading: false }));
-        } catch (err) {
+        } catch {
           dispatch(setEndpointState({ isLoading: false }));
         }
       },

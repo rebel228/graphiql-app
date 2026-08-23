@@ -7,7 +7,6 @@ import { isValidSelector, urlSelector } from '../../store/slices/endpointSlice';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { changeResult } from '../../store/slices/resultSlice';
-import { prepareToPrettify, prettify } from '../../helpers/prettify';
 
 const EditorsSection = () => {
   const [editorQuery, setEditorQuery] = useState(`{\n\n}\n`);
@@ -25,10 +24,10 @@ const EditorsSection = () => {
     let headers = {};
     try {
       variables = JSON.parse(variablesString);
-    } catch (error) {}
+    } catch {}
     try {
       headers = JSON.parse(headersString);
-    } catch (error) {}
+    } catch {}
 
     if (url) {
       dispatch(
@@ -43,7 +42,7 @@ const EditorsSection = () => {
   };
 
   const prettifyQuerry = () => {
-    setEditorQuery(prettify(prepareToPrettify(editorQuery)));
+    setEditorQuery(JSON.stringify(editorQuery, null, 2));
   };
 
   return (

@@ -16,7 +16,11 @@ const Header: FC = () => {
 
   const handleScroll = () => {
     const windowScrollTop = window.scrollY;
-    windowScrollTop > 10 ? setSticky(true) : setSticky(false);
+    if (windowScrollTop > 10) {
+      setSticky(true);
+    } else {
+      setSticky(false);
+    }
   };
   useEffect(() => {
     window.addEventListener(

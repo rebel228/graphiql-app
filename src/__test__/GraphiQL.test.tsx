@@ -28,7 +28,7 @@ describe('GraphiQL component', () => {
           screen
             .getByTestId('btn-send')
             .classList.contains('disabled:pointer-events-none')
-        ).toBeFalsy;
+        ).toBeFalsy();
       },
       {
         timeout: 5000,
@@ -45,7 +45,7 @@ describe('GraphiQL component', () => {
           screen
             .getByTestId('btn-send')
             .classList.contains('disabled:pointer-events-none')
-        ).toBeTruthy;
+        ).toBeTruthy();
       },
       {
         timeout: 5000,
@@ -65,8 +65,9 @@ describe('GraphiQL component', () => {
     await waitFor(async () => {
       fireEvent.click(screen.getByRole('tab', { name: 'Переменные' }));
       await waitFor(() => {
-        expect(screen.getByTestId('tabpanel-variables').style.opacity === '1')
-          .toBeTruthy;
+        expect(
+          screen.getByTestId('tabpanel-variables').style.opacity === '1'
+        ).toBeTruthy();
       });
     });
   });
@@ -81,8 +82,9 @@ describe('GraphiQL component', () => {
     await waitFor(async () => {
       fireEvent.click(screen.getByRole('tab', { name: 'Заголовки' }));
       await waitFor(() => {
-        expect(screen.getByTestId('tabpanel-header').style.opacity === '1')
-          .toBeTruthy;
+        expect(
+          screen.getByTestId('tabpanel-header').style.opacity === '1'
+        ).toBeTruthy();
       });
     });
   });
@@ -98,8 +100,9 @@ describe('GraphiQL component', () => {
       fireEvent.click(screen.getByRole('tab', { name: 'Заголовки' }));
       fireEvent.click(screen.getByTestId('tabs-shevron-btn'));
       await waitFor(() => {
-        expect(screen.getByTestId('tabs-body').style.height === '0px')
-          .toBeTruthy;
+        expect(
+          screen.getByTestId('tabs-body').style.height === '0px'
+        ).toBeTruthy();
       });
     });
   });

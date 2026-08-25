@@ -64,7 +64,7 @@ const ControlPanel = () => {
           {spellingList.graphiQL.apply}
         </ButtonThemed>
       ) : (
-        <ButtonThemed onClick={changeHandler}>
+        <ButtonThemed onClick={changeHandler} data-testid="change-button">
           {spellingList.graphiQL.change}
         </ButtonThemed>
       )}
@@ -77,6 +77,7 @@ const ControlPanel = () => {
           label="Endpoint"
           inputRef={inputRef}
           defaultValue={'https://graphql-pokemon2.vercel.app/'}
+          data-testid="input-url"
         />
       </div>
     </div>

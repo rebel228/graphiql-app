@@ -59,7 +59,7 @@ const EditorsSection = () => {
           disabled={isValid ? false : true}
           tooltip={{ text: spellingList.graphiQL.send, position: 'left' }}
           onClick={sendHandler}
-          data-testid="btn-send"
+          data-testid="send-button"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

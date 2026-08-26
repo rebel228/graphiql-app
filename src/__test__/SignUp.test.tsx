@@ -1,12 +1,22 @@
 import '@testing-library/jest-dom';
 import { describe, it } from 'vitest';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import WrapperWithLocaleContext from './helpers/WrapperWithLocaleContext';
 import WrapperWithStore from './helpers/WrapperWithStore';
 import SignUp from '../components/Forms/SignUp';
 import { store } from '../store/store';
-import { regPath } from '../store/slices/authPathSlice';
 import MemoryRouterProvider from './helpers/MemoryRouterProvider';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { User } from 'firebase/auth';
+import { localesObj } from '../dto/locales';
+
+vi.mock('react-firebase-hooks/auth', () => ({
+  useAuthState: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.mocked(useAuthState).mockReturnValue([null, false, undefined]);
+});
 
 describe('SignUp component', () => {
   it('renders correctly', () => {
@@ -17,13 +27,15 @@ describe('SignUp component', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    expect(
-      screen.getByRole('heading', { name: /Ваше имя/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Регистрация' })
-    ).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Имя')).toBeInTheDocument();
+    const nameSignUp = screen.getByTestId('name-signUp');
+    const emailSignUp = screen.getByTestId('email-signUp');
+    const passwordSignUp = screen.getByTestId('password-signUp');
+    const buttonSignUp = screen.getByTestId('button-signUp');
+
+    expect(nameSignUp).toBeInTheDocument();
+    expect(emailSignUp).toBeInTheDocument();
+    expect(passwordSignUp).toBeInTheDocument();
+    expect(buttonSignUp).toBeInTheDocument();
   });
 
   it('renders the name validation error', async () => {
@@ -34,15 +46,15 @@ describe('SignUp component', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
-      const nameInput = screen.getByPlaceholderText('Имя');
-      fireEvent.change(nameInput, { target: { value: '' } });
-      fireEvent.click(screen.getByRole('button', { name: 'Регистрация' }));
-    });
-    expect(
-      screen.getAllByText('Это поле обязательно к заполнению')[0]
-    ).toBeInTheDocument();
+    const nameInput = screen.getByTestId('name-signUp');
+    fireEvent.change(nameInput, { target: { value: '' } });
+    fireEvent.click(screen.getByTestId('button-signUp'));
+
+    expect(await screen.findByTestId('name-signUp-error')).toHaveTextContent(
+      localesObj.ru.forms.requiredError
+    );
   });
+
   it('renders the email validation error', async () => {
     render(
       <WrapperWithStore>
@@ -51,15 +63,15 @@ describe('SignUp component', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
-      const emailInput = screen.getByPlaceholderText('name@mail.com');
-      fireEvent.change(emailInput, { target: { value: 'invalid email' } });
-      fireEvent.click(screen.getByRole('button', { name: 'Регистрация' }));
-    });
-    expect(
-      screen.getByText('Email не является допустимым')
-    ).toBeInTheDocument();
+    const emailInput = screen.getByTestId('email-signUp');
+    fireEvent.change(emailInput, { target: { value: 'invalid email' } });
+    fireEvent.click(screen.getByTestId('button-signUp'));
+
+    expect(await screen.findByTestId('email-signUp-error')).toHaveTextContent(
+      localesObj.ru.forms.emailError
+    );
   });
+
   it('renders the password validation error', async () => {
     render(
       <WrapperWithStore>
@@ -68,18 +80,17 @@ describe('SignUp component', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
-      const passwordInput = screen.getByPlaceholderText('********');
-      fireEvent.change(passwordInput, { target: { value: '123q@' } });
-      fireEvent.click(screen.getByRole('button', { name: 'Регистрация' }));
-    });
+    const passwordInput = screen.getByTestId('password-signUp');
+    fireEvent.change(passwordInput, { target: { value: '123q@' } });
+    fireEvent.click(screen.getByTestId('button-signUp'));
+
     expect(
-      screen.getByText('Должно быть минимум 8 символов')
-    ).toBeInTheDocument();
+      await screen.findByTestId('password-signUp-error')
+    ).toHaveTextContent(localesObj.ru.forms.passwordErrorCount);
   });
+
   it('successful sign up ui communication', async () => {
-    store.dispatch(regPath());
-    render(
+    const { rerender } = render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="en">
           <MemoryRouterProvider initialEntries={['/auth']} />
@@ -87,9 +98,12 @@ describe('SignUp component', () => {
       </WrapperWithStore>
     );
 
-    await waitFor(() => {
-      expect(screen.getByTestId('auth-page')).toBeInTheDocument();
-    });
+    expect(await screen.findByTestId('auth-page')).toBeInTheDocument();
+    const mockUser = {
+      uid: 'TestName',
+      email: 'test@domain.com',
+    } as User;
+    vi.mocked(useAuthState).mockReturnValue([null, false, undefined]);
 
     const nameSignUp = screen.getByTestId('name-signUp');
     const emailSignUp = screen.getByTestId('email-signUp');
@@ -101,9 +115,22 @@ describe('SignUp component', () => {
     expect(passwordSignUp).toBeInTheDocument();
     expect(buttonSignUp).toBeInTheDocument();
 
+    vi.mocked(useAuthState).mockReturnValue([mockUser, false, undefined]);
+
+    rerender(
+      <WrapperWithStore>
+        <WrapperWithLocaleContext lang="en">
+          <MemoryRouterProvider initialEntries={['/auth']} />
+        </WrapperWithLocaleContext>
+      </WrapperWithStore>
+    );
+
     fireEvent.change(nameSignUp, { target: { value: 'TestName' } });
     fireEvent.change(emailSignUp, { target: { value: 'test@domain.com' } });
     fireEvent.change(passwordSignUp, { target: { value: '12345Qw$' } });
     fireEvent.click(buttonSignUp);
+
+    expect(await screen.findByTestId('graphql-page')).toBeInTheDocument();
+    expect(store.getState().user.isAuth).toBe(true);
   });
 });

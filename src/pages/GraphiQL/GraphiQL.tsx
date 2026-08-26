@@ -1,11 +1,13 @@
-import { FC, Suspense, lazy } from 'react';
+import { FC, Suspense, lazy, useEffect } from 'react';
 import Loader from '../../components/Loader/Loader';
 import DocsModal from '../../components/GraphiQL/DocsModal';
-import { useAppSelector } from '../../hooks/useAppSelector';
-import { docsShown } from '../../store/slices/docsSlice';
+import { resetResult } from '../../store/slices/resultSlice';
+import { setEndpointState } from '../../store/slices/endpointSlice';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { closeDocs } from '../../store/slices/docsSlice';
 
 const GraphiQL: FC = () => {
-  const isDocsShown = useAppSelector(docsShown);
+  const dispatch = useAppDispatch();
 
   const LazyControlPanel = lazy(
     () => import('../../components/GraphiQL/ControlPanel')
@@ -17,10 +19,18 @@ const GraphiQL: FC = () => {
     () => import('../../components/GraphiQL/ResultsSection')
   );
 
+  useEffect(() => {
+    return () => {
+      dispatch(resetResult());
+      dispatch(closeDocs());
+      dispatch(setEndpointState({ url: '', isValid: false, isLoading: false }));
+    };
+  }, [dispatch]);
+
   return (
     <Suspense fallback={<Loader />}>
       <section
-        className="flex flex-col w-full h-full md:max-h-[calc(100vh-149.6px)]"
+        className="flex flex-col items-center w-full h-full md:max-h-[calc(100vh-149.6px)]"
         data-testid="graphql-page"
       >
         <LazyControlPanel />
@@ -28,8 +38,8 @@ const GraphiQL: FC = () => {
           <LazyEditorsSection />
           <LazyResultsSection />
         </div>
+        <DocsModal />
       </section>
-      {isDocsShown && <DocsModal />}
     </Suspense>
   );
 };

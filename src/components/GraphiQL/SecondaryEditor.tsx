@@ -36,6 +36,8 @@ const SecondaryEditor: FC<SecondaryEditorProps> = ({
     <Tabs className="w-full" value={activeTab}>
       <Accordion
         open={open}
+        data-testid="accordion"
+        data-open={open}
         icon={
           <ChevronDownIcon
             onClick={() => handleOpen(true)}
@@ -67,6 +69,7 @@ const SecondaryEditor: FC<SecondaryEditorProps> = ({
                   ? 'text-gray-900 w-26 md:w-32 lg:w-36'
                   : 'w-26 md:w-32 lg:w-36'
               }`}
+              data-testid="variables-tab"
             >
               {locales[lang].graphiQL.variables}
             </Tab>
@@ -81,13 +84,14 @@ const SecondaryEditor: FC<SecondaryEditorProps> = ({
                   ? 'text-gray-900 w-26 md:w-32 lg:w-36'
                   : 'w-26 md:w-32 lg:w-36'
               }`}
+              data-testid="header-tab"
             >
               {locales[lang].graphiQL.headers}
             </Tab>
           </TabsHeader>
         </AccordionHeader>
         <AccordionBody className="py-0">
-          <TabsBody className="h-full" data-testid="tabs-body">
+          <TabsBody className="h-full">
             <TabPanel
               className="p-0 h-full overflow-auto h-[150px]"
               value={'variables'}

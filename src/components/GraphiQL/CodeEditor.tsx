@@ -17,7 +17,7 @@ const CodeEditor = forwardRef<
   return (
     <div
       className={`relative w-full max-w-full overflow-auto min-h-[100px]${
-        props.mode !== 'docs' && ' md:h-full'
+        props.mode !== 'docs' ? ' md:h-full' : ''
       }`}
     >
       {props.children && (

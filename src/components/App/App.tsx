@@ -20,7 +20,11 @@ const App: FC = () => {
   );
 
   useEffect(() => {
-    user ? dispatch(login()) : dispatch(logout());
+    if (user) {
+      dispatch(login());
+    } else {
+      dispatch(logout());
+    }
     setSpellingList(localesObj[lang]);
   }, [dispatch, user, lang]);
 

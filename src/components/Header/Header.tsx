@@ -16,7 +16,11 @@ const Header: FC = () => {
 
   const handleScroll = () => {
     const windowScrollTop = window.scrollY;
-    windowScrollTop > 10 ? setSticky(true) : setSticky(false);
+    if (windowScrollTop > 10) {
+      setSticky(true);
+    } else {
+      setSticky(false);
+    }
   };
   useEffect(() => {
     window.addEventListener(
@@ -41,11 +45,17 @@ const Header: FC = () => {
             : 'sticky top-0 z-10 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4  bg-peachFuzz-500 border-transparent'
         }
         onScroll={handleScroll}
+        data-testid="navbar"
       >
         <div className="flex items-center justify-between text-blue-gray-900">
           <div className="flex items-center gap-4">
-            <Link to={Paths.WELCOME}>
-              <img className="block" src={logo} alt="logoGraphQl" />
+            <Link to={Paths.WELCOME} data-testid="header-logo-link">
+              <img
+                className="block"
+                src={logo}
+                alt="logoGraphQl"
+                data-testid="header-logo"
+              />
             </Link>
             <WelcomeButton />
           </div>
@@ -62,6 +72,7 @@ const Header: FC = () => {
               ripple={false}
               className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:invisible"
               onClick={() => setOpenNav(!openNav)}
+              data-testid="burger-menu-button"
             >
               <div
                 className={`${genericHamburgerLine} ${

@@ -6,7 +6,7 @@ import WrapperWithStore from './helpers/WrapperWithStore';
 import GraphiQL from '../pages/GraphiQL/GraphiQL';
 
 describe('GraphiQL component', () => {
-  it('Send button gets enabled/disabled correctly', async () => {
+  it('Renders GraphiQL component correctly', async () => {
     render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="ru">
@@ -18,43 +18,11 @@ describe('GraphiQL component', () => {
     await waitFor(() => {
       expect(screen.getByTestId('graphql-page')).toBeInTheDocument();
     });
-
-    await waitFor(
-      () => {
-        const applyButton = screen.getByRole('button', { name: 'Применить' });
-        expect(applyButton).toBeInTheDocument();
-        fireEvent.click(applyButton);
-        expect(
-          screen
-            .getByTestId('btn-send')
-            .classList.contains('disabled:pointer-events-none')
-        ).toBeFalsy;
-      },
-      {
-        timeout: 5000,
-        interval: 100,
-      }
-    );
-
-    await waitFor(
-      () => {
-        const changeButton = screen.getByRole('button', { name: 'Изменить' });
-        expect(changeButton).toBeInTheDocument();
-        fireEvent.click(changeButton);
-        expect(
-          screen
-            .getByTestId('btn-send')
-            .classList.contains('disabled:pointer-events-none')
-        ).toBeTruthy;
-      },
-      {
-        timeout: 5000,
-        interval: 100,
-      }
-    );
   });
+});
 
-  it('Secondary editor expands correct tab when clicking on variables', async () => {
+describe('Send button tests', () => {
+  it('Send button gets enabled/disabled correctly', async () => {
     render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="ru">
@@ -62,15 +30,37 @@ describe('GraphiQL component', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(async () => {
-      fireEvent.click(screen.getByRole('tab', { name: 'Переменные' }));
-      await waitFor(() => {
-        expect(screen.getByTestId('tabpanel-variables').style.opacity === '1')
-          .toBeTruthy;
-      });
+
+    await screen.findByTestId('control-panel');
+
+    const applyButton = screen.getByTestId('apply-button');
+
+    await waitFor(() => {
+      expect(applyButton).toBeInTheDocument();
+    });
+
+    fireEvent.click(applyButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('send-button')).not.toBeDisabled();
+    });
+
+    const changeButton = await screen.findByTestId('change-button');
+
+    await waitFor(() => {
+      expect(changeButton).toBeInTheDocument();
+    });
+
+    fireEvent.click(changeButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('send-button')).toBeDisabled();
     });
   });
-  it('Secondary editor expands correct tab when clicking on header', async () => {
+});
+
+describe('Secondary editor tests', () => {
+  it('Secondary editor expands correct tabs when clicking on variables/headers', async () => {
     render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="ru">
@@ -78,15 +68,28 @@ describe('GraphiQL component', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(async () => {
-      fireEvent.click(screen.getByRole('tab', { name: 'Заголовки' }));
-      await waitFor(() => {
-        expect(screen.getByTestId('tabpanel-header').style.opacity === '1')
-          .toBeTruthy;
-      });
+    await screen.findByTestId('control-panel');
+    const variablesTab = await screen.findByTestId('variables-tab');
+    const headerTab = await screen.findByTestId('header-tab');
+
+    fireEvent.click(variablesTab);
+    const tabPanelVariables = await screen.findByTestId('tabpanel-variables');
+    const tabPanelHeader = await screen.findByTestId('tabpanel-header');
+
+    await waitFor(() => {
+      expect(tabPanelVariables.style.opacity).toBe('1');
+      expect(tabPanelHeader.style.opacity).toBe('0');
+    });
+
+    fireEvent.click(headerTab);
+
+    await waitFor(() => {
+      expect(tabPanelVariables.style.opacity).toBe('0');
+      expect(tabPanelHeader.style.opacity).toBe('1');
     });
   });
-  it('Secondary editor collapses correctty when clicking on shevron button', async () => {
+
+  it('Secondary editor opens and collapses correctty when clicking on shevron button', async () => {
     render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="ru">
@@ -94,13 +97,46 @@ describe('GraphiQL component', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(async () => {
-      fireEvent.click(screen.getByRole('tab', { name: 'Заголовки' }));
-      fireEvent.click(screen.getByTestId('tabs-shevron-btn'));
-      await waitFor(() => {
-        expect(screen.getByTestId('tabs-body').style.height === '0px')
-          .toBeTruthy;
-      });
+    await screen.findByTestId('graphql-page');
+
+    const shevronButton = screen.getByTestId('tabs-shevron-btn');
+    const accordion = screen.getByTestId('accordion');
+
+    expect(accordion).toHaveAttribute('data-open', 'false');
+
+    fireEvent.click(shevronButton);
+    await waitFor(() => {
+      expect(accordion).toHaveAttribute('data-open', 'true');
+    });
+
+    fireEvent.click(shevronButton);
+    await waitFor(() => {
+      expect(accordion).toHaveAttribute('data-open', 'false');
+    });
+  });
+
+  it('Chevron icon rotates when accordion opens/closes', async () => {
+    render(
+      <WrapperWithStore>
+        <WrapperWithLocaleContext lang="ru">
+          <GraphiQL />
+        </WrapperWithLocaleContext>
+      </WrapperWithStore>
+    );
+    await screen.findByTestId('graphql-page');
+
+    const shevronButton = screen.getByTestId('tabs-shevron-btn');
+
+    expect(shevronButton).not.toHaveClass('rotate-180');
+
+    fireEvent.click(shevronButton);
+    await waitFor(() => {
+      expect(shevronButton).toHaveClass('rotate-180');
+    });
+
+    fireEvent.click(shevronButton);
+    await waitFor(() => {
+      expect(shevronButton).not.toHaveClass('rotate-180');
     });
   });
 });

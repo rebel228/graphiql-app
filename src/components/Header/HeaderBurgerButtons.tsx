@@ -11,7 +11,7 @@ import { auth } from '../../services/firebase';
 import ButtonHeaderBurger from '../_ui/ButtonHeader/ButtonHeaderBurger';
 
 const HeaderBurgerButtons: FC = () => {
-  let buttons: JSX.Element;
+  let buttons: React.ReactElement;
   const isAuth = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
   const { spellingList } = useContext(LocaleContext);

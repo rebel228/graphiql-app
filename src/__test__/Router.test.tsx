@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { describe, it } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import WrapperWithLocaleContext from './helpers/WrapperWithLocaleContext';
 import WrapperWithStore from './helpers/WrapperWithStore';
 import MemoryRouterProvider from './helpers/MemoryRouterProvider';
@@ -16,9 +16,7 @@ describe('Welcome Page', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
-      expect(screen.getByTestId('welcome-page')).toBeInTheDocument();
-    });
+    expect(await screen.findByTestId('welcome-page')).toBeInTheDocument();
   });
 });
 
@@ -31,9 +29,7 @@ describe('404 Page', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
-      expect(screen.getByTestId('not-found-page')).toBeInTheDocument();
-    });
+    expect(await screen.findByTestId('not-found-page')).toBeInTheDocument();
   });
 });
 
@@ -47,8 +43,7 @@ describe('GraphQL Page', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
-      expect(screen.getByTestId('welcome-page')).toBeInTheDocument();
-    });
+    expect(store.getState().user.isAuth).toBe(false);
+    expect(await screen.findByTestId('welcome-page')).toBeInTheDocument();
   });
 });

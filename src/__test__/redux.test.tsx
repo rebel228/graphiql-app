@@ -146,13 +146,11 @@ describe('Reducers', () => {
       url: '',
       isValid: false,
       isLoading: false,
-      documentation: '',
     };
     const payload = {
       url: 'url',
       isValid: true,
       isLoading: true,
-      documentation: 'documentation',
     };
     expect(
       endpointSlice.reducer(initialState, setEndpointUrl('url'))
@@ -160,7 +158,6 @@ describe('Reducers', () => {
       url: 'url',
       isValid: false,
       isLoading: false,
-      documentation: '',
     });
     expect(
       endpointSlice.reducer(initialState, setIsLoading(true))
@@ -168,14 +165,12 @@ describe('Reducers', () => {
       url: '',
       isValid: false,
       isLoading: true,
-      documentation: '',
     });
     expect(endpointSlice.reducer(initialState, setIsValid(true))).toMatchObject(
       {
         url: '',
         isValid: true,
         isLoading: false,
-        documentation: '',
       }
     );
     expect(
@@ -183,7 +178,7 @@ describe('Reducers', () => {
     ).toMatchObject(payload);
   });
 
-  it('docshSlice reducer returns new state', () => {
+  it('docsSlice reducer returns new state', () => {
     expect(docsSlice.reducer({ open: false }, openDocs())).toMatchObject({
       open: true,
     });

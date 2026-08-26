@@ -11,7 +11,7 @@ const TestComponent: FC = () => {
 };
 
 describe('Context with language control', () => {
-  it('support English', async () => {
+  it('support English', () => {
     render(
       <WrapperWithLocaleContext lang="en">
         <TestComponent />
@@ -19,7 +19,8 @@ describe('Context with language control', () => {
     );
     expect(screen.getByText('Test')).toBeInTheDocument();
   });
-  it('support Russian', async () => {
+
+  it('supports Russian', () => {
     render(
       <WrapperWithLocaleContext lang="ru">
         <TestComponent />

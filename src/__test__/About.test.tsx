@@ -9,7 +9,11 @@ import { store } from '../store/store';
 import { login, logout } from '../store/slices/userSlice';
 
 describe('Welcome Page', () => {
-  it('renders sign-in, sign-up without auth', async () => {
+  beforeEach(() => {
+    store.dispatch(logout());
+  });
+
+  it('renders sign-in, sign-up buttons when not authenticated', async () => {
     render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="en">
@@ -19,13 +23,14 @@ describe('Welcome Page', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
+    expect(() => {
       expect(screen.getByTestId('about-sign-in-btn')).toBeInTheDocument();
       expect(screen.getByTestId('about-sign-up-btn')).toBeInTheDocument();
+      expect(screen.queryByTestId('about-main-btn')).not.toBeInTheDocument();
     });
   });
 
-  it('renders main button with auth', async () => {
+  it('renders main button when authenticated', async () => {
     render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="en">
@@ -35,13 +40,15 @@ describe('Welcome Page', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    await waitFor(() => {
-      store.dispatch(login());
+    store.dispatch(login());
+    expect(() => {
       expect(screen.getByTestId('about-main-btn')).toBeInTheDocument();
+      expect(screen.queryByTestId('about-sign-in-btn')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('about-sign-up-btn')).not.toBeInTheDocument();
     });
   });
 
-  it('renders sign-in, sign-up without auth', async () => {
+  it('clicking sign-in button changes auth path to login', async () => {
     render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="en">
@@ -51,26 +58,8 @@ describe('Welcome Page', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    store.dispatch(logout());
+    fireEvent.click(screen.getByTestId('about-sign-in-btn'));
     await waitFor(() => {
-      fireEvent.click(screen.getByTestId('about-sign-in-btn'));
-      expect(store.getState().authPath.isLoginPath).toBe(true);
-    });
-  });
-
-  it('clicking sign-in changes auth path', async () => {
-    render(
-      <WrapperWithStore>
-        <WrapperWithLocaleContext lang="en">
-          <MemoryRouterProvider initialEntries={['/']}>
-            <About />
-          </MemoryRouterProvider>
-        </WrapperWithLocaleContext>
-      </WrapperWithStore>
-    );
-    store.dispatch(logout());
-    await waitFor(() => {
-      fireEvent.click(screen.getByTestId('about-sign-in-btn'));
       expect(store.getState().authPath.isLoginPath).toBe(true);
     });
   });
@@ -85,10 +74,39 @@ describe('Welcome Page', () => {
         </WrapperWithLocaleContext>
       </WrapperWithStore>
     );
-    store.dispatch(logout());
+    fireEvent.click(screen.getByTestId('about-sign-up-btn'));
     await waitFor(() => {
-      fireEvent.click(screen.getByTestId('about-sign-up-btn'));
       expect(store.getState().authPath.isLoginPath).toBe(false);
+    });
+  });
+
+  it('clicking sign-in navigates to auth page', async () => {
+    render(
+      <WrapperWithStore>
+        <WrapperWithLocaleContext lang="en">
+          <MemoryRouterProvider initialEntries={['/']}></MemoryRouterProvider>
+        </WrapperWithLocaleContext>
+      </WrapperWithStore>
+    );
+    const signInButton = await screen.findByTestId('about-sign-in-btn');
+    fireEvent.click(signInButton);
+    await waitFor(() => {
+      expect(screen.getByTestId('auth-page')).toBeInTheDocument();
+    });
+  });
+
+  it('clicking sign-up navigates to auth page', async () => {
+    render(
+      <WrapperWithStore>
+        <WrapperWithLocaleContext lang="en">
+          <MemoryRouterProvider initialEntries={['/']}></MemoryRouterProvider>
+        </WrapperWithLocaleContext>
+      </WrapperWithStore>
+    );
+    const signUpButton = await screen.findByTestId('about-sign-up-btn');
+    fireEvent.click(signUpButton);
+    await waitFor(() => {
+      expect(screen.getByTestId('auth-page')).toBeInTheDocument();
     });
   });
 });

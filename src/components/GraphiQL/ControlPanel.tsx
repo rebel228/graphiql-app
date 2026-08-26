@@ -5,6 +5,7 @@ import { LocaleContext } from '../LocaleContext/LocaleContext';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import {
   isValidSelector,
+  setEndpointState,
   setEndpointUrl,
 } from '../../store/slices/endpointSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
@@ -32,9 +33,8 @@ const ControlPanel = () => {
   };
 
   const changeHandler = () => {
-    if (inputRef.current?.value) {
-      setEditMode(true);
-    }
+    setEditMode(true);
+    dispatch(setEndpointState({ isValid: false }));
   };
 
   const [currentRequestId, setCurrentRequestId] = useState<string>('');
@@ -64,7 +64,7 @@ const ControlPanel = () => {
           {spellingList.graphiQL.apply}
         </ButtonThemed>
       ) : (
-        <ButtonThemed onClick={changeHandler}>
+        <ButtonThemed onClick={changeHandler} data-testid="change-button">
           {spellingList.graphiQL.change}
         </ButtonThemed>
       )}
@@ -77,6 +77,7 @@ const ControlPanel = () => {
           label="Endpoint"
           inputRef={inputRef}
           defaultValue={'https://graphql-pokemon2.vercel.app/'}
+          data-testid="input-url"
         />
       </div>
     </div>

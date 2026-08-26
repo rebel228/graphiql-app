@@ -64,7 +64,7 @@ const SignUp: FC = () => {
         setLoading(false);
         dispatch(login());
         setLoading(true);
-        auth.currentUser &&
+        if (auth.currentUser) {
           updateProfile(auth.currentUser, {
             displayName: data.name,
           })
@@ -78,6 +78,7 @@ const SignUp: FC = () => {
                 toast.error(`${errorCode}`, { draggable: false });
               }
             });
+        }
         toast.success(`${spellingList.forms.success}`, { draggable: false });
         <Navigate to={Paths.MAIN} replace />;
       })
@@ -139,7 +140,10 @@ const SignUp: FC = () => {
             }}
             data-testid="name-signUp"
           />
-          <span className="form__error text-red-500">
+          <span
+            className="form__error text-red-500"
+            data-testid="name-signUp-error"
+          >
             {errors.name?.message ? errors.name?.message : ''}
           </span>
           <Typography variant="h6" color="blue-gray" className="-mb-3">
@@ -156,7 +160,10 @@ const SignUp: FC = () => {
             }}
             data-testid="email-signUp"
           />
-          <span className="form__error text-red-500">
+          <span
+            className="form__error text-red-500"
+            data-testid="email-signUp-error"
+          >
             {errors.email?.message ? errors.email?.message : ''}
           </span>
           <Typography variant="h6" color="blue-gray" className="-mb-3">
@@ -174,7 +181,10 @@ const SignUp: FC = () => {
             }}
             data-testid="password-signUp"
           />
-          <span className="form__error text-red-500">
+          <span
+            className="form__error text-red-500"
+            data-testid="password-signUp-error"
+          >
             {errors.password?.message ? errors.password?.message : ''}
           </span>
         </div>

@@ -1,7 +1,13 @@
 export const prettify = (string: string): string => {
   const braces: boolean[] = [];
+  let insideString = false;
+
   for (let i = 0; i < string.length; i++) {
-    if (['{', '['].includes(string[i])) {
+    if (string[i] === '"') {
+      insideString = !insideString;
+    }
+
+    if (!insideString && ['{', '['].includes(string[i])) {
       if (
         (string[i] === '[' && string[i + 1] === ']') ||
         (string[i] === '{' && string[i + 1] === '}')
@@ -16,7 +22,7 @@ export const prettify = (string: string): string => {
         i += 1;
       }
     }
-    if (['}', ']'].includes(string[i])) {
+    if (!insideString && ['}', ']'].includes(string[i])) {
       braces.pop();
       string =
         string.slice(0, i) +
@@ -24,7 +30,7 @@ export const prettify = (string: string): string => {
         string.slice(i);
       i = i + braces.length + 1;
     }
-    if (',' === string[i]) {
+    if (!insideString && ',' === string[i]) {
       if (string[i + 1] === ' ') {
         string = string.slice(0, i + 1) + string.slice(i + 2);
       }
@@ -34,11 +40,11 @@ export const prettify = (string: string): string => {
         string.slice(i + 1);
       i += 1;
     }
-    if (':' === string[i] && string[i + 1].match(/\S/)) {
+    if (!insideString && ':' === string[i] && string[i + 1].match(/\S/)) {
       string = string.slice(0, i + 1) + ' ' + string.slice(i + 1);
       i += 1;
     }
-    if ([',"'].includes(string[i] + string[i + 1])) {
+    if (!insideString && [',"'].includes(string[i] + string[i + 1])) {
       string = string.slice(0, i + 1) + ' ' + string.slice(i + 1);
       i += 1;
     }

@@ -90,7 +90,7 @@ describe('SignUp component', () => {
   });
 
   it('successful sign up ui communication', async () => {
-    const {rerender} = render(
+    const { rerender } = render(
       <WrapperWithStore>
         <WrapperWithLocaleContext lang="en">
           <MemoryRouterProvider initialEntries={['/auth']} />

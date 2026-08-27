@@ -9,6 +9,7 @@ import DeveloperCard from '../../components/Welcome/DeveloperCard';
 import { Typography } from '@material-tailwind/react';
 import { loginPath, regPath } from '../../store/slices/authPathSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { developers } from '../../dto/developers';
 
 const About: FC = () => {
   const { spellingList } = useContext(LocaleContext);
@@ -48,30 +49,17 @@ const About: FC = () => {
       </section>
       <section className="flex flex-col items-center w-full">
         <article className="flex gap-8 w-full justify-center p-8 bg-peachFuzz-50 flex-wrap">
-          <DeveloperCard
-            name={'Inga Moshkareva'}
-            descr={spellingList.welcome.ingamuseDescr}
-            avatarUrl={'https://avatars.githubusercontent.com/u/76948119?v=4'}
-            position={spellingList.welcome.developer}
-            githubName={'ingamuse'}
-            githubLink={'https://github.com/ingamuse'}
-          />
-          <DeveloperCard
-            name={'Dmitry Novik'}
-            descr={spellingList.welcome.rebelDescr}
-            avatarUrl={'https://avatars.githubusercontent.com/u/58699696?v=4'}
-            position={spellingList.welcome.teamLead}
-            githubName={'rebel228'}
-            githubLink={'https://github.com/rebel228/'}
-          />
-          <DeveloperCard
-            name={'Maksim Sinelnikau'}
-            descr={spellingList.welcome.maximusDescr}
-            avatarUrl={'https://avatars.githubusercontent.com/u/96006023?v=4'}
-            position={spellingList.welcome.developer}
-            githubName={'maxsimusprime'}
-            githubLink={'https://github.com/maxsimusprime'}
-          />
+          {developers.map((dev) => (
+            <DeveloperCard
+              key={dev.id}
+              name={dev.name}
+              descr={spellingList.welcome[`${dev.id}Descr`]}
+              avatarUrl={dev.avatarUrl}
+              position={spellingList.welcome[dev.position]}
+              githubName={dev.githubName}
+              githubLink={dev.githubLink}
+            />
+          ))}
         </article>
 
         <article className="w-full p-6">

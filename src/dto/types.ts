@@ -57,3 +57,13 @@ export type GetGraphQLApiErrorMessageFuncType = (
   spellingList: SpellingList,
   error: FetchBaseQueryError | SerializedError
 ) => string;
+
+export interface Developer {
+  id: string;
+  name: string;
+  githubName: string;
+  githubLink: string;
+  avatarUrl: string;
+  position: string;
+  imageAlt: string;
+}

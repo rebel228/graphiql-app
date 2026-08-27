@@ -18,13 +18,13 @@ describe('Footer tests', () => {
       'href',
       'https://github.com/rebel228'
     );
-    expect(screen.getByTestId('max-link')).toHaveAttribute(
+    expect(screen.getByTestId('maximus-link')).toHaveAttribute(
       'href',
       'https://github.com/maxsimusprime'
     );
-    expect(screen.getByTestId('inga-link')).toHaveAttribute(
+    expect(screen.getByTestId('ingamuse-link')).toHaveAttribute(
       'href',
-      'https://github.com/IngaMuse'
+      'https://github.com/ingamuse'
     );
     expect(screen.getByTestId('rs-link')).toHaveAttribute(
       'href',
@@ -32,8 +32,8 @@ describe('Footer tests', () => {
     );
 
     expect(screen.getByTestId('dima-image')).toHaveAttribute('src');
-    expect(screen.getByTestId('max-image')).toHaveAttribute('src');
-    expect(screen.getByTestId('inga-image')).toHaveAttribute('src');
+    expect(screen.getByTestId('maximus-image')).toHaveAttribute('src');
+    expect(screen.getByTestId('ingamuse-image')).toHaveAttribute('src');
     expect(screen.getByTestId('rs-image')).toHaveAttribute('src');
   });
 });
